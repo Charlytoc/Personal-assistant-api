@@ -2,7 +2,11 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from datetime import timedelta
-from ..authenticate.models import EngineProvider
+from ..authenticate.models import EngineProvider, Organization
+from django.utils.text import slugify
+import base64
+
+
 
 class Engine(models.Model):
     name = models.CharField(max_length=255)
@@ -48,3 +52,21 @@ class Message(models.Model):
     def __str__(self):
         return f"{self.role}: {self.content}"
     
+class TextDocument(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    description = models.TextField(null=True, blank=True)
+    content = models.TextField()
+    title = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        # Encode content as base64 to protect personal data
+        self.content = base64.b64encode(self.content.encode()).decode()
+        # Generate slug based on name
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
