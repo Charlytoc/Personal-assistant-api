@@ -396,3 +396,6 @@ In Render.com, when you are deploying, add the necessary configuration
   ```
   ./build.sh
   ```
+
+## <span class="rose">Error handling</span>
+If build.sh appears being incorrectly, check the line-endings
