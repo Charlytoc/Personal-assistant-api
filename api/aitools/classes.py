@@ -68,11 +68,16 @@ class CustomTextLoader(BaseLoader):
         return [Document(page_content=text, metadata=metadata)]
 
 class DocumentReader():
-    def __init__(self, document_text: str) -> None:
+    def __init__(self, document_text: str, openai_api_key: str) -> None:
         self.loader = CustomTextLoader(document_text)
+        self.openai_api_key = openai_api_key
+        os.environ['OPENAI_API_KEY'] = self.openai_api_key
         self.index = VectorstoreIndexCreator().from_loaders([self.loader])
+        del os.environ['OPENAI_API_KEY']
     def run(self, question_to_answer: str):
-        return self.index.query(question_to_answer)
+        answer = self.index.query(question_to_answer)
+        
+        return answer
     
 
 

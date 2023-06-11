@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
 from .models import TextDocument
+from ..authenticate.models import ProviderCredentials
 from .serializers import TextDocumentSerializer
 from api.aitools.classes import DocumentReader, ContextAgent, Role
 
@@ -31,8 +32,10 @@ def conversation(request):
         question = data.get('question')
         document_id = data.get('document_id')
         text_document = TextDocument.objects.get(pk=document_id)
+        openai_key = ProviderCredentials.objects.get(organization=text_document.organization)
         text_document_data = TextDocumentSerializer(text_document).data
-        document_reader_tool = DocumentReader(text_document_data["content"])
+        print(openai_key.key, "THIS IS THE OPENA I KEY")
+        document_reader_tool = DocumentReader(text_document_data["content"], openai_api_key=openai_key.key)
         answer = document_reader_tool.run(question)
         response_data = {
             "answer": answer
