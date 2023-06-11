@@ -15,7 +15,7 @@ class AgentAdmin(admin.ModelAdmin):
 
 @admin.register(Conversation)
 class ConversationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'user', 'agent', 'token_count', 'started_at', 'ended_at', 'created_at')
+    list_display = ('id','title', 'user', 'agent', 'token_count', 'started_at', 'ended_at', 'created_at')
     search_fields = ('title', 'user__username', 'agent__name')
 
 @admin.register(Message)
@@ -25,5 +25,5 @@ class MessageAdmin(admin.ModelAdmin):
 
 @admin.register(TextDocument)
 class TextDocumentAdmin(admin.ModelAdmin):
-    list_display = ('title', 'slug', 'organization', 'created_at')
+    list_display = ('id', 'title', 'slug', 'organization', 'created_at')
     search_fields = ('title', 'slug', 'organization__name')
