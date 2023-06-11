@@ -67,6 +67,8 @@ class CustomTextLoader(BaseLoader):
         metadata = self.metadata
         return [Document(page_content=text, metadata=metadata)]
 
+import logging
+
 class DocumentReader():
     def __init__(self, document_text: str, openai_api_key: str) -> None:
         self.loader = CustomTextLoader(document_text)
@@ -74,13 +76,17 @@ class DocumentReader():
         os.environ['OPENAI_API_KEY'] = self.openai_api_key
         self.index = VectorstoreIndexCreator().from_loaders([self.loader])
         del os.environ['OPENAI_API_KEY']
-    def run(self, question_to_answer: str):
-        answer = self.index.query(question_to_answer)
+        logging.info("Index created successfully")
         
-        return answer
-    
-
-
+    def run(self, question_to_answer: str):
+        try:
+            answer = self.index.query(question_to_answer)
+            logging.info(f"Answer found for question: {question_to_answer}")
+            return answer
+        except Exception as e:
+            logging.error(f"Error occurred while querying index: {e}")
+            return None
+        
 class Role():
     USER = 'USER'
     SYSTEM = 'SYSTEM'
