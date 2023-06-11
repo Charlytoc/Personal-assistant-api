@@ -1,3 +1,9 @@
+
+from django.utils import timezone
+from datetime import timedelta
+import string
+import secrets
+
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import timedelta
@@ -27,4 +33,28 @@ class ProviderCredentials(models.Model):
     engine_provider = models.ForeignKey(EngineProvider, on_delete=models.CASCADE)
     expiration_date = models.DateField(default=datetime.date.today() + timedelta(days=60))
 
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+
+class Token(models.Model):
+
+    key = models.CharField(max_length=255, editable=False, unique=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    expiration_date = models.DateTimeField(default=timezone.now() + timedelta(days=30))
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.token = Token.generate_unique_token()
+        super().save(*args, **kwargs)
+
+    @staticmethod
+    def generate_unique_token(length=20):
+        characters = string.ascii_letters + string.digits
+        token = ''.join(secrets.choice(characters) for _ in range(length))
+        return token
+    
+
+class TokenUsage(models.Model):
+    token = models.ForeignKey(Token, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

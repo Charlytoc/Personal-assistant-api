@@ -1,4 +1,5 @@
-
+from langchain.chains import RetrievalQA
+from langchain.llms import OpenAI
 from functions import print_in_color
 import os
 from dotenv import load_dotenv
@@ -6,17 +7,27 @@ from dotenv import load_dotenv
 from typing import Any, Dict, List, Optional
 import logging
 from typing import List, Optional
+from langchain.indexes import VectorstoreIndexCreator
 
 from langchain.docstore.document import Document
 from langchain.document_loaders.base import BaseLoader
 from langchain.document_loaders.helpers import detect_file_encodings
+
+
+from langchain.chat_models import ChatOpenAI
+from langchain.schema import (
+    AIMessage,
+    HumanMessage,
+    SystemMessage, 
+    BaseMessage
+)
+from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)
 
 
 from langchain.document_loaders import TextLoader
 load_dotenv()
-
 
 class CustomTextLoader(BaseLoader):
     """Load plain text and metadata dictionary."""
@@ -55,4 +66,41 @@ class CustomTextLoader(BaseLoader):
 
         metadata = self.metadata
         return [Document(page_content=text, metadata=metadata)]
+
+class DocumentReader():
+    def __init__(self, document_text: str) -> None:
+        self.loader = CustomTextLoader(document_text)
+        self.index = VectorstoreIndexCreator().from_loaders([self.loader])
+    def run(self, question_to_answer: str):
+        return self.index.query(question_to_answer)
+    
+
+
+class Role():
+    USER = 'USER'
+    SYSTEM = 'SYSTEM'
+    ASSISTANT = 'ASSISTANT'
+
+
+
+
+class ContextAgent():
+    def __init__(self, system_message: str = "You are a helpful assistant that follows the conversation flow", context: list[dict] = [], openai_api_key:str = '') -> None:
+        self.messages: list[BaseMessage] = []
+        self.append_message(content=system_message, role=Role.SYSTEM)
+        for message in context:
+            self.append_message(content=message["content"], role=message["role"])
+        self.chat = ChatOpenAI(temperature=0)
+
+    def append_message(self, content:str, role:str):
+        options = {
+            Role.ASSISTANT: lambda: self.messages.append(AIMessage(content=content)),
+            Role.USER: lambda: self.messages.append(HumanMessage(content=content)),
+            Role.SYSTEM: lambda: self.messages.append(SystemMessage(content=content)),
+        }
+        options[role]()
+    def run(self, question: str):
+        self.append_message(content=question, role=Role.USER)
+        response = self.chat(self.messages).content
+        return response
 

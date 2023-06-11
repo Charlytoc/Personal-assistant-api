@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Organization, OrganizationMember, EngineProvider, ProviderCredentials
+from .models import Organization, OrganizationMember, EngineProvider, ProviderCredentials, Token, TokenUsage
 
 @admin.register(Organization)
 class OrganizationAdmin(admin.ModelAdmin):
@@ -18,3 +18,10 @@ class EngineProviderAdmin(admin.ModelAdmin):
 @admin.register(ProviderCredentials)
 class ProviderCredentialsAdmin(admin.ModelAdmin):
     list_display = ('key', 'organization', 'engine_provider', 'expiration_date', 'created_at')
+@admin.register(Token)
+class TokenAdmin(admin.ModelAdmin):
+    list_display = ('key', 'user', 'expiration_date')
+
+@admin.register(TokenUsage)
+class TokenUsageAdmin(admin.ModelAdmin):
+    list_display = ('token','created_at')

@@ -58,15 +58,15 @@ class TextDocument(models.Model):
     description = models.TextField(null=True, blank=True)
     content = models.TextField()
     title = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
     def save(self, *args, **kwargs):
         # Encode content as base64 to protect personal data
         self.content = base64.b64encode(self.content.encode()).decode()
         # Generate slug based on name
-        self.slug = slugify(self.name)
+        self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return self.title
+    

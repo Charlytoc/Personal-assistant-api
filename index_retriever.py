@@ -2,11 +2,11 @@ from langchain.chains import RetrievalQA
 from langchain.llms import OpenAI
 from functions import print_in_color
 import os
-from dotenv import load_dotenv
 
 from typing import Any, Dict, List, Optional
 import logging
 from typing import List, Optional
+from langchain.indexes import VectorstoreIndexCreator
 
 from langchain.docstore.document import Document
 from langchain.document_loaders.base import BaseLoader
@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 from langchain.document_loaders import TextLoader
+from dotenv import load_dotenv
 load_dotenv()
 
 class CustomTextLoader(BaseLoader):
@@ -57,8 +58,14 @@ class CustomTextLoader(BaseLoader):
         return [Document(page_content=text, metadata=metadata)]
 
 
-# loader = TextLoader('documents/state_of_the_union.txt', encoding='utf8')
-loader = CustomTextLoader('''
+class DocumentReader():
+    def __init__(self, document_text: str) -> None:
+        self.loader = CustomTextLoader(document_text)
+        self.index = VectorstoreIndexCreator().from_loaders([self.loader])
+    def run(self, question_to_answer: str):
+        return self.index.query(question_to_answer)
+    
+document_reader = DocumentReader(document_text='''
 Madam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.  
 
 Last year COVID-19 kept us apart. This year we are finally together again. 
@@ -690,6 +697,7 @@ He was born a soldier. Army National Guard. Combat medic in Kosovo and Iraq.
 
 Stationed near Baghdad, just yards from burn pits the size of football fields. 
 
+
 Heath’s widow Danielle is here with us tonight. They loved going to Ohio State football games. He loved building Legos with their daughter. 
 
 But cancer from prolonged exposure to burn pits ravaged Heath’s lungs and body. 
@@ -782,15 +790,7 @@ One America.
 The United States of America. 
 
 May God bless you all. May God protect our troops.
-''', encoding='utf8')
+''')
 
 
-
-
-from langchain.indexes import VectorstoreIndexCreator
-
-index = VectorstoreIndexCreator().from_loaders([loader])
-
-query = "What did the president say about Ketanji Brown Jackson"
-
-print_in_color(index.query(query), 'red')
+print_in_color(document_reader.run("What did the president say about Ketanji Brown Jackson"))
