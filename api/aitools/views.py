@@ -34,7 +34,6 @@ def conversation(request):
         text_document = TextDocument.objects.get(pk=document_id)
         openai_key = ProviderCredentials.objects.get(organization=text_document.organization)
         text_document_data = TextDocumentSerializer(text_document).data
-        print(openai_key.key, "THIS IS THE OPENA I KEY")
         document_reader_tool = DocumentReader(text_document_data["content"], openai_api_key=openai_key.key)
         answer = document_reader_tool.run(question)
         response_data = {
