@@ -22,6 +22,7 @@ from .aitools.views import run_home_agent, playground, conversation
 
 apps = [
     ('auth/', 'api.authenticate.urls', 'auth'),
+    ('v1/aitools/', 'api.aitools.urls', 'aitools'),
 ]
 
 urlpatterns_apps = [path(url, include(urlconf, namespace=namespace)) for url, urlconf, namespace in apps]

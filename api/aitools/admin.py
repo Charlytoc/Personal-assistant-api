@@ -15,7 +15,7 @@ class AgentAdmin(admin.ModelAdmin):
 
 @admin.register(Conversation)
 class ConversationAdmin(admin.ModelAdmin):
-    list_display = ('id','title', 'user', 'agent', 'token_count', 'started_at', 'ended_at', 'created_at')
+    list_display = ('id','title', 'user', 'token_count', 'started_at', 'ended_at', 'created_at')
     search_fields = ('title', 'user__username', 'agent__name')
 
 @admin.register(Message)

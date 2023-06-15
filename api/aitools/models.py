@@ -10,7 +10,7 @@ import base64
 
 class Engine(models.Model):
     name = models.CharField(max_length=255)
-    slug = models.SlugField(help_text="This must be an identificator for the provider")
+    slug = models.CharField(max_length=255, help_text="This must be an identificator for the provider")
     description = models.TextField(blank=True, null=True)
     engine_provider = models.ForeignKey(EngineProvider, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -25,12 +25,10 @@ class Agent(models.Model):
 class Conversation(models.Model):
     title = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    agent = models.ForeignKey(Agent, on_delete=models.CASCADE)
     token_count = models.IntegerField(blank=True, null=True)
 
     started_at = models.DateTimeField()
-    ended_at = models.DateTimeField()
-
+    ended_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 class Message(models.Model):

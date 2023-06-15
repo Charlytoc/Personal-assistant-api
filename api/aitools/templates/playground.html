@@ -5,38 +5,89 @@
 <div class="container flex-full">
     <div class="full-vh threats-side-component">
         <div class="header">
-            <h2>Threats</h2>
+            <h2>Conversations</h2>
         </div>
         <div class="options">
-            <span >Filter by text:</span>
-            <input type="text" class="" />
+            <div>
+                <button class="button-gray-coral">New chat</button>
+            </div>
+            <div><span >Filter by text:</span>
+                <input type="text" class="" />
+            </div>
         </div>
         <div class="history">
-            <button>Conversation asd a dad</button>
-            <button>Conversation a</button>
-            <button>Conversation asd a dad</button>
-            <button>Conversation asd a dad</button>
+            {% for conversation in conversations %}
+            <button>{{conversation.title}}</button>
+            {% endfor %}
         </div>
         <div class="footer">
-            <span >Username: Charlytoc</span>
+            <span >User: {{user.username}}</span>
         </div>
     </div>
     <div class="playground-component">
         <div class="header">
-            <h1>Chat</h1>
+            <h1 class="font-gradient">Chat</h1>
         </div>
         <div class="chat-input">
-            <input class="h-full" type="text"/>
+            <textarea class="h-full" type="text"></textarea>
             <button class="button-gray-coral">Submit</button>
         </div>
+        <div class="chat-tools">
+            <label for="agent">Agent:</label>
+            <select name="agents" id="agents">
+                {% for agent in agents %}
+                <option value="{{ agent.id }}"{% if forloop.first %} selected{% endif %}>{{ agent.name }}</option>
+                {% endfor %}
+            </select>
+            <label for="documents">Document:</label>
+            <select name="documents" id="documents">
+                {% for agent in documents %}
+                <option value="{{ agent.id }}"{% if forloop.first %} selected{% endif %}>{{ agent.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
         <div class="chat-messages">
-            <div class="user-message message-bubble">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam iure suscipit eveniet sunt quos? Unde, temporibus? Veritatis itaque culpa repellendus voluptas ex inventore. Animi, sint recusandae! Dolore non magnam at.</p>
-            </div>
-            <div class="bot-message message-bubble">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam iure suscipit eveniet sunt quos? Unde, temporibus? Veritatis itaque culpa repellendus voluptas ex inventore. Animi, sint recusandae! Dolore non magnam at.</p>
-            </div>
+         
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block script %}
+<script>
+
+const conversationId = 123; // Replace with the actual conversation ID
+const url = `/conversation/${conversationId}/message`;
+
+// Payload data
+const payload = {
+  question: "What is your question?",
+  conversation_id: 3,
+  document_id: 456, // Replace with the actual document ID
+  agent_id: 789, // Replace with the actual agent ID
+};
+
+// Fetch request
+fetch(url, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer YOUR_AUTH_TOKEN', // Replace with your actual authorization token
+  },
+  body: JSON.stringify(payload),
+})
+  .then(response => response.json())
+  .then(data => {
+    // Handle the response data
+    console.log(data);
+  })
+  .catch(error => {
+    // Handle any errors
+    console.error(error);
+  });
+
+
+
+
+</script>
 {% endblock %}

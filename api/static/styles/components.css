@@ -1,17 +1,13 @@
 .threats-side-component {
-    min-width: 200px;
-    background-color: var(--gray-200);
+    min-width: 300px;
+    background-color: var(--gray-100);
     max-width: 23%;
     /* border-right: 1px solid var(--color-blue); */
     > div {
         padding: 5px;
     }
     > div.header {
-        background-color: var(--gray-300);
-        /* text-decoration: underline;
-        text-decoration-color:  lightcoral;
-        text-decoration-thickness: 2px;
-        text-decoration-style:wavy; */
+        background-color: var(--gray-200);
     }
     > div.history {
         display: flex;
@@ -22,21 +18,24 @@
             background-color: var(--gray-600);
             flex-grow: 1;
             font-weight: 600;
-        }
-        >button:hover, >button:active, >button:focus {
-            background-color: lightcoral;
-            outline: 0;
             cursor: pointer;
+        }
+        >button:hover {
+            background: linear-gradient(0, #20c991, #20a7c9);
+           
+        }
+        >button:active {
+            opacity: 0.8;
         }
         
     }
     > div.options {
-        display: flex;
-        justify-content: space-around;
-        gap: 3px;
-        > span {
-            color: lightcoral;
-            padding: 3px;
+        >div {
+            margin-top: 3px;
+            text-align: center;
+            >* {
+                width: 100%;
+            }
         }
 
     }
@@ -47,28 +46,65 @@
 }
 
 .playground-component {
+    background-color: var(--gray-400);
+    position: relative;
     >div.header {
-        color: lightcoral;
-        padding: 5px;
+        padding: 9px;
+        background-color: var(--gray-200);
     }
     >div.chat-input {
-        height: 50px;
-        padding: 5px;
+        height: 80px;
+        padding: 14px;
+        position: sticky;
+        bottom: 0;
+        background-color: var(--gray-300);
+        display: flex;
+        >textarea {
+            flex-grow: 1;
+            padding: 5px;
+            outline: none;
+            font-family: var(--font-readable);
+            
+        }
+        >textarea:hover, >textarea:focus {
+            border: #20a7c9 1px solid;
+        }
+        >button {
+            background: linear-gradient(0, #20c991, #20a7c9);
+            max-width: 100px;
+            opacity: 0.6;
+        }
+        >button:hover {
+            opacity: 1;
+        }
+       
+    }
+    >div.chat-tools {
+        background-color: #20c991;
+        padding: 10px;
+        background-color: var(--gray-100);
+        >select {
+            padding: 5px;
+            /* border: 1px solid #20c991; */
+        }
+        >select:active, >select:focus {
+            outline: none;
+        }
 
-        /* background-color: var(--gray-300); */
     }
     >div.chat-messages {
         padding: 5px;
+        
         >div.message-bubble {
             padding: 5px;
             border-radius: 5px;
             margin-bottom: 5px;
         }
         >div.user-message {
-            background-color: rgba(240, 128, 128, 0.409);
+            background-color: var(--gray-300);
         }
         >div.bot-message {
-            background-color: var(--gray-300);
+            background-color: rgba(128, 240, 212, 0.409);
         }
     }
 }

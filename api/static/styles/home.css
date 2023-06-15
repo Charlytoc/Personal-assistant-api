@@ -91,10 +91,13 @@
     flex-grow: 1;
     font-weight: 600;
 }
-.button-gray-coral:hover, .button-gray-coral:active, .button-gray-coral:focus {
-    background-color: lightcoral;
-    outline: 0;
+.button-gray-coral:hover {
+    background: linear-gradient(0, #20c991, #20a7c9);
+    outline: 1;
     cursor: pointer;
+}
+.button-gray-coral:active {
+    opacity: 0.8;
 }
 .h-full {
     height: 100%;

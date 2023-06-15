@@ -44,8 +44,7 @@ class Token(models.Model):
     expiration_date = models.DateTimeField(default=timezone.now() + timedelta(days=30))
 
     def save(self, *args, **kwargs):
-        if not self.pk:
-            self.token = Token.generate_unique_token()
+        self.key = Token.generate_unique_token()
         super().save(*args, **kwargs)
 
     @staticmethod

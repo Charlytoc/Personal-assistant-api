@@ -10,6 +10,11 @@ COPY requirements.txt .
 # Install the Python dependencies
 RUN pip install -r requirements.txt
 
+# Install ZSH, Git and Oh My Zsh
+RUN apt-get update && \
+    apt-get install -y zsh git && \
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
 # Copy the rest of the application code to the container
 COPY . .
 RUN python manage.py migrate

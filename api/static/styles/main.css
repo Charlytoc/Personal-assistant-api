@@ -61,5 +61,13 @@ input {
 }
 input:hover, input:active, input:focus {
     outline: none;
-    border: 1px solid lightcoral;
+    border: 1px solid var(--color-green-aqua);
+}
+.font-gradient {
+    background: linear-gradient(0, #20c991, #20a7c9);
+    background-clip: text !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+
+
 }
