@@ -17,6 +17,7 @@ def get_serialized_documents():
     documents = TextDocument.objects.all()
     serializer = SmallTextDocumentSerializer(documents, many=True)
     serialized_data = serializer.data
+    
     return serialized_data
 
 

@@ -2,36 +2,41 @@
 
 
 {% block content %}
-<div class="container flex-full">
-    <div class="full-vh threats-side-component">
+<div class="chat-container">
+    <div class="floating-ball open-sidebar">
+        <p >Open side component</p>
+    </div>
+    <div class=" threats-side-component">
         <div class="header">
             <h2>Conversations</h2>
+            <button class="hide-sidebar">Close</button>
         </div>
         <div class="options">
             <div>
                 <button class="button-gray-coral">New chat</button>
             </div>
-            <div><span >Filter by text:</span>
+            <!-- <div><span >Filter by text:</span>
                 <input type="text" class="" />
-            </div>
+            </div> -->
         </div>
         <div class="history">
             {% for conversation in conversations %}
             <button>{{conversation.title}}</button>
             {% endfor %}
         </div>
-        <div class="footer">
+        <!-- <div class="footer">
             <span >User: {{user.username}}</span>
-        </div>
+        </div> -->
     </div>
     <div class="playground-component">
         <div class="header">
             <h1 class="font-gradient">Chat</h1>
         </div>
         <div class="chat-input">
-            <textarea class="h-full" type="text"></textarea>
-            <button class="button-gray-coral">Submit</button>
-        </div>
+            <input type="hidden" id="conversation-id"  value="{{conversation_id}}" />
+            <textarea rows=19 id="user-input" class="h-full" type="text"></textarea>
+            <button id="submit-btn" class="button-gray-coral">Submit</button>
+          </div>
         <div class="chat-tools">
             <label for="agent">Agent:</label>
             <select name="agents" id="agents">
@@ -41,53 +46,34 @@
             </select>
             <label for="documents">Document:</label>
             <select name="documents" id="documents">
-                {% for agent in documents %}
-                <option value="{{ agent.id }}"{% if forloop.first %} selected{% endif %}>{{ agent.title }}</option>
+                {% for document in documents %}
+                <option value="{{ document.id }}"{% if forloop.first %} selected{% endif %}>{{ document.title }}</option>
                 {% endfor %}
             </select>
         </div>
         <div class="chat-messages">
-         
+            <div class="message-bubble user-message">hello</div>
+            <div class="message-bubble bot-message">Hello Im the bot</div>
         </div>
     </div>
 </div>
 {% endblock %}
 
 {% block script %}
+
 <script>
+ 
+  </script>
 
-const conversationId = 123; // Replace with the actual conversation ID
-const url = `/conversation/${conversationId}/message`;
-
-// Payload data
-const payload = {
-  question: "What is your question?",
-  conversation_id: 3,
-  document_id: 456, // Replace with the actual document ID
-  agent_id: 789, // Replace with the actual agent ID
-};
-
-// Fetch request
-fetch(url, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer YOUR_AUTH_TOKEN', // Replace with your actual authorization token
-  },
-  body: JSON.stringify(payload),
-})
-  .then(response => response.json())
-  .then(data => {
-    // Handle the response data
-    console.log(data);
-  })
-  .catch(error => {
-    // Handle any errors
-    console.error(error);
-  });
-
-
-
-
+<script>
+    // THIS LOGIC WORKS TO SEND DATA TO THE WEBHOOK
+    // const chatInput = document.querySelector('.chat-input textarea');
+    // const submitButton = document.querySelector('.chat-input button');
+    // // attach event listener to button
+    // submitButton.addEventListener('click', function() {
+    //     const message = { "message": chatInput.value }; // Define the message to send
+    //     socket.send(JSON.stringify(message)); // Send the message
+    //     chatInput.value = ''; // clear the textarea
+    // });
 </script>
 {% endblock %}

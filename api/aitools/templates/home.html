@@ -11,3 +11,33 @@
     </a>
 </div>
 {% endblock %}
+{% block script %}
+<script>
+  const url = 'ws://' + window.location.host + '/ws/conversation/';
+  const socket = new WebSocket(url);
+  
+  // Event handler for when the connection is established
+  socket.onopen = function(event) {
+      console.log("Connection established!");
+      const message = { "message": "Hello" }; // Define the message to send
+      socket.send(JSON.stringify(message)); // Send the message
+  };
+
+  // Event handler for receiving messages from the server
+  socket.onmessage = function(event) {
+      // Parse the received message
+      const response = JSON.parse(event.data);
+  
+      // Access the message from the server
+      const messageFromServer = response.message;
+  
+      // Process the message as needed
+      console.log('Message from server:', messageFromServer);
+  };
+
+  // Event handler for when the connection is closed
+  socket.onclose = function(event) {
+    console.log('WebSocket connection closed.');
+  };
+</script>
+{% endblock %}

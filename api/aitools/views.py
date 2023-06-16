@@ -13,17 +13,17 @@ from .models import TextDocument
 from ..authenticate.models import ProviderCredentials
 from .serializers import TextDocumentSerializer
 from api.aitools.classes import DocumentReader, ContextAgent, Role
-from .actions import (get_serialized_agents, get_serialized_documents, get_user_from_token, get_user_conversations, serialize_conversations, create_conversation,
+from .actions import (
+    get_serialized_agents, get_serialized_documents, get_user_from_token, get_user_conversations, serialize_conversations, create_conversation,
                       get_agent_by_id, get_empty_conversation_by_user)
 
-# search = SerpAPIWrapper()
+from .classes import DocumentReader
 # Create your views here.
 def run_home_agent(request):
-    
     return render(request, 'home.html')
 
 
-def playground(request):
+def start_conversation(request):
     token = request.GET.get('token', '')
     user = get_user_from_token(token)
     if not user:
@@ -33,7 +33,6 @@ def playground(request):
         return JsonResponse(response_data, status=401)
     
     conversation = get_empty_conversation_by_user(user)
-
     agents = get_serialized_agents()
     documents = get_serialized_documents()
     conversations = get_user_conversations(user)
@@ -71,20 +70,18 @@ def conversation(request):
 @csrf_exempt
 def follow_conversation(request, conversation_id):
     if request.method == "POST":
-
         # Catch error if the token is None, return a Json error
         auth_header = request.headers['Authorization']
         token = auth_header.split(' ')[1] 
-
+        print(f'This is the conversation ID: {conversation_id}')
         # Get the data from the request body and return a json if any miss indication which fields are needed
         data = json.loads(request.body)
-        conversation_id = data.get('conversation_id')
         question = data.get('question')
         document_id = data.get('document_id')
         agent_id = data.get('agent_id')
 
         # get the agent model, return an error if something if the agent not exist
-        agent = get_agent_by_id(agent_id)
+        # agent = get_agent_by_id(agent_id)
 
         
         text_document = TextDocument.objects.get(pk=document_id)
@@ -95,7 +92,7 @@ def follow_conversation(request, conversation_id):
         # get the content from the document
         text_document_data = TextDocumentSerializer(text_document).data
         
-        document_reader_tool = agent(text_document_data["content"], openai_api_key=openai_key.key)
+        document_reader_tool = DocumentReader(text_document_data["content"], openai_api_key=credentials.key)
         answer = document_reader_tool.run(question)
         response_data = {
             "answer": answer

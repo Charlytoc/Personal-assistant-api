@@ -5,3 +5,4 @@ app_name = 'aitools'
 urlpatterns = [
     path('conversation/<int:conversation_id>/message', follow_conversation, name='message'),
 ]
+
