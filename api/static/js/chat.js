@@ -8,9 +8,7 @@ const draggableElement = document.getElementById("draggableElement");
 hideSiderBar()
 openSideBar()
 addEventHandlers()
-onWindowLoad()
-// onOptionsDragStart()
-// onOptionsDragEnd()
+
 
 
 function addEventHandlers() {
@@ -39,14 +37,8 @@ function onSubmitMessage() {
   userInput.value = '';
 };
 
-
-
-
-
-
 function sendMessage(question, agentId, documentId, conversationId) {
   // You still need to replace this with the way you are getting your conversation ID
-
   const url = `v1/aitools/conversation/${conversationId}/message`;
   addUserMessage(question)
   // Payload data
@@ -103,17 +95,16 @@ function addUserMessage(message) {
   const userMessageDiv = document.createElement("div");
   userMessageDiv.classList.add("message-bubble", "user-message");
   userMessageDiv.innerText = message;
-
   // Get the chat-messages container and append the new user message
   const chatMessagesContainer = document.querySelector(".chat-messages");
   chatMessagesContainer.appendChild(userMessageDiv);
 }
+
 function addBotMessage(message) {
   // Create a new div element for the user message
   const userMessageDiv = document.createElement("div");
   userMessageDiv.classList.add("message-bubble", "bot-message");
   userMessageDiv.innerText = message;
-
   // Get the chat-messages container and append the new user message
   const chatMessagesContainer = document.querySelector(".chat-messages");
   chatMessagesContainer.appendChild(userMessageDiv);
@@ -133,44 +124,3 @@ function addBotMessage(message) {
 
 
 
-
-
-// function onOptionsDragStart () {
-//   console.log("HELLO");
-//   draggableElement.addEventListener("dragstart", handleDragStart);
-// }
-// function onOptionsDragEnd () {
-//   draggableElement.addEventListener("dragend", handleDragEnd);
-// }
-
-// function handleDragStart(event) {
-//   event.dataTransfer.setData("text/plain", event.target.id);
-// }
-
-// function handleDragEnd(event) {
-//   let vw = (event.clientX / window.innerWidth) * 100;
-//   let vh = (event.clientY / window.innerHeight) * 100;
-  
-//   // Calculate relative vw and vh values
-//   let coordinates = JSON.stringify({ vw: event.clientX, vh: event.clientY });
-//   localStorage.setItem("draggableElementCoordinates", coordinates);
-
-//   draggableElement.style.left = vw + "vw";
-//   draggableElement.style.top = vh + "vh";
-// }
-
-// // Retrieve the coordinates from localStorage and set the draggable element position accordingly
-// function onWindowLoad () {
-//   window.addEventListener("load", () => {
-//     const coordinates = localStorage.getItem("draggableElementCoordinates");
-//     if (coordinates) {
-//       const { vw, vh } = JSON.parse(coordinates);
-//       draggableElement.style.left = vw + "vw";
-//       draggableElement.style.top = vh + "vh";
-//     }
-//     else {
-//       draggableElement.style.left = '12' + "vw";
-//       draggableElement.style.top = '12' + "vh";
-//     }
-//   });
-// }

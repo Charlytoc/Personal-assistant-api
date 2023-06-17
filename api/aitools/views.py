@@ -18,6 +18,7 @@ from .actions import (
                       get_agent_by_id, get_empty_conversation_by_user)
 
 from .classes import DocumentReader
+from asgiref.sync import sync_to_async
 # Create your views here.
 def run_home_agent(request):
     return render(request, 'home.html')
@@ -78,23 +79,29 @@ def follow_conversation(request, conversation_id):
         data = json.loads(request.body)
         question = data.get('question')
         document_id = data.get('document_id')
-        agent_id = data.get('agent_id')
+        # agent_id = data.get('agent_id')
 
+
+
+
+
+
+        answer = get_document_reader_answer(question=question, document_id=document_id)
         # get the agent model, return an error if something if the agent not exist
         # agent = get_agent_by_id(agent_id)
-
         
-        text_document = TextDocument.objects.get(pk=document_id)
-
-        # get the credentials
-        credentials = ProviderCredentials.objects.get(organization=text_document.organization)
-        
-        # get the content from the document
-        text_document_data = TextDocumentSerializer(text_document).data
-        
-        document_reader_tool = DocumentReader(text_document_data["content"], openai_api_key=credentials.key)
-        answer = document_reader_tool.run(question)
         response_data = {
             "answer": answer
         }
         return JsonResponse(response_data)
+
+@sync_to_async
+def get_document_reader_answer(question: str, document_id: int):
+    text_document = TextDocument.objects.get(pk=document_id)
+    # get the credentials
+    credentials = ProviderCredentials.objects.get(organization=text_document.organization)
+    # get the content from the document
+    text_document_data = TextDocumentSerializer(text_document).data
+    document_reader_tool = DocumentReader(text_document_data["content"], openai_api_key=credentials.key)
+    answer = document_reader_tool.run(question)
+    return answer
