@@ -3,17 +3,30 @@
 
 {% block content %}
 <div class="chat-container">
-    <div class="floating-ball open-sidebar">
-        <p >Open side component</p>
-    </div>
+  
     <div class=" threats-side-component">
         <div class="header">
             <h2>Conversations</h2>
             <button class="hide-sidebar">Close</button>
         </div>
+
         <div class="options">
             <div>
                 <button class="button-gray-coral">New chat</button>
+            </div>
+            <div class="chat-tools">
+            
+                <select name="agents" id="agents">
+                    {% for agent in agents %}
+                    <option value="{{ agent.id }}"{% if forloop.first %} selected{% endif %}>{{ agent.name }}</option>
+                    {% endfor %}
+                </select>
+               
+                <select name="documents" id="documents">
+                    {% for document in documents %}
+                    <option value="{{ document.id }}"{% if forloop.first %} selected{% endif %}>{{ document.title }}</option>
+                    {% endfor %}
+                </select>
             </div>
             <!-- <div><span >Filter by text:</span>
                 <input type="text" class="" />
@@ -35,36 +48,22 @@
         <div class="chat-input">
             <input type="hidden" id="conversation-id"  value="{{conversation_id}}" />
             <textarea rows=19 id="user-input" class="h-full" type="text"></textarea>
-            <button id="submit-btn" class="button-gray-coral">Submit</button>
+            <div>
+                <button id="submit-btn" class="button-gray-coral">Submit</button>
+                <button class="button-gray-coral open-sidebar">
+                    Open side component
+                </button>
+            </div>
           </div>
-        <div class="chat-tools">
-            <label for="agent">Agent:</label>
-            <select name="agents" id="agents">
-                {% for agent in agents %}
-                <option value="{{ agent.id }}"{% if forloop.first %} selected{% endif %}>{{ agent.name }}</option>
-                {% endfor %}
-            </select>
-            <label for="documents">Document:</label>
-            <select name="documents" id="documents">
-                {% for document in documents %}
-                <option value="{{ document.id }}"{% if forloop.first %} selected{% endif %}>{{ document.title }}</option>
-                {% endfor %}
-            </select>
-        </div>
+        
         <div class="chat-messages">
-            <div class="message-bubble user-message">hello</div>
-            <div class="message-bubble bot-message">Hello Im the bot</div>
+            <div class="message-bubble bot-message">Hello there! I'm a powerful chatbot that can make a lot of things!</div>
         </div>
     </div>
 </div>
 {% endblock %}
 
 {% block script %}
-
-<script>
- 
-  </script>
-
 <script>
     // THIS LOGIC WORKS TO SEND DATA TO THE WEBHOOK
     // const chatInput = document.querySelector('.chat-input textarea');
