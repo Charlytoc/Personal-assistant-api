@@ -95,7 +95,10 @@ def follow_conversation(request, conversation_id):
         }
         return JsonResponse(response_data)
 
-# @sync_to_async
+@sync_to_async
+def async_get_document_reader_answer(question: str, document_id: int):
+    return get_document_reader_answer(question=question, document_id=document_id)
+
 def get_document_reader_answer(question: str, document_id: int):
     text_document = TextDocument.objects.get(pk=document_id)
     # get the credentials
