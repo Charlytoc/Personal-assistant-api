@@ -1,6 +1,6 @@
 
 const textarea = document.getElementById('user-input');
-// console.log("HELLO WORLD");
+console.log("HELLO WORLD");
 const floatingBall = document.querySelector('.open-sidebar');
 const threatsSideComponent = document.querySelector('.threats-side-component');
 const draggableElement = document.getElementById("draggableElement");
@@ -8,7 +8,7 @@ const draggableElement = document.getElementById("draggableElement");
 hideSiderBar()
 openSideBar()
 addEventHandlers()
-onWindowLoad()
+
 // onOptionsDragStart()
 // onOptionsDragEnd()
 
