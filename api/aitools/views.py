@@ -74,7 +74,7 @@ def follow_conversation(request, conversation_id):
         # Catch error if the token is None, return a Json error
         auth_header = request.headers['Authorization']
         token = auth_header.split(' ')[1] 
-        print(f'This is the conversation ID: {conversation_id}')
+        print(f'This is the conversation ID from view: {conversation_id}')
         # Get the data from the request body and return a json if any miss indication which fields are needed
         data = json.loads(request.body)
         question = data.get('question')
