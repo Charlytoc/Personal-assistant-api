@@ -30,8 +30,11 @@ html {
 }
 body {
     background: linear-gradient(0, #040410, #011f27);
+
     font-family: var(--font-readable);
     font-weight: 800;
+    
+    min-height: 100vh;
 }
 h1 {
     font-size: 3rem;
