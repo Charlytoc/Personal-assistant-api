@@ -10,16 +10,19 @@ COPY requirements.txt .
 # Install the Python dependencies
 RUN pip install -r requirements.txt
 
-# Install ZSH, Git and Oh My Zsh
+# Install ZSH, Git, and Oh My Zsh
 RUN apt-get update && \
     apt-get install -y zsh git && \
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
 # Copy the rest of the application code to the container
 COPY . .
+
+# Run the Django migration
 RUN python manage.py migrate
 
-# Expose the port that the Django app will run on
+# Expose the port that Daphne will run on
 EXPOSE 8000
 
-CMD ["python", "manage.py", "runserver"]
+# Start the Daphne server
+CMD ["daphne", "api.asgi:application"]
