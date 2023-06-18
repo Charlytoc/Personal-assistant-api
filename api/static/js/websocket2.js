@@ -1,7 +1,7 @@
 let socket;
 
 function initializeWebSocket() {
-  const websocketUrl = 'ws://' + window.location.host + '/ws/conversation/';
+  const websocketUrl = 'wss://' + window.location.host + '/ws/conversation/';
   socket = new WebSocket(websocketUrl);
 
   // Event handler for when the connection is established
@@ -54,4 +54,4 @@ function handleReceivedMessage(event) {
 }
 
 // Call this when you start your application
-initializeWebSocket();
+// initializeWebSocket();

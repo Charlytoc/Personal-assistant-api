@@ -74,17 +74,12 @@ def follow_conversation(request, conversation_id):
         # Catch error if the token is None, return a Json error
         auth_header = request.headers['Authorization']
         token = auth_header.split(' ')[1] 
-        print(f'This is the conversation ID: {conversation_id}')
+        # print(f'This is the conversation ID: {conversation_id}')
         # Get the data from the request body and return a json if any miss indication which fields are needed
         data = json.loads(request.body)
         question = data.get('question')
         document_id = data.get('document_id')
         # agent_id = data.get('agent_id')
-
-
-
-
-
 
         answer = get_document_reader_answer(question=question, document_id=document_id)
         # get the agent model, return an error if something if the agent not exist
@@ -95,7 +90,7 @@ def follow_conversation(request, conversation_id):
         }
         return JsonResponse(response_data)
 
-@sync_to_async
+# @sync_to_async
 def get_document_reader_answer(question: str, document_id: int):
     text_document = TextDocument.objects.get(pk=document_id)
     # get the credentials
