@@ -19,6 +19,25 @@ from .actions import (
 
 from .classes import DocumentReader
 from asgiref.sync import sync_to_async
+
+@sync_to_async
+def async_get_document_reader_answer(question: str, document_id: int):
+    return get_document_reader_answer(question=question, document_id=document_id)
+
+def get_document_reader_answer(question: str, document_id: int):
+    text_document = TextDocument.objects.get(pk=document_id)
+    # get the credentials
+    credentials = ProviderCredentials.objects.get(organization=text_document.organization)
+    # get the content from the document
+    text_document_data = TextDocumentSerializer(text_document).data
+    document_reader_tool = DocumentReader(text_document_data["content"], openai_api_key=credentials.key)
+    answer = document_reader_tool.run(question)
+    return answer
+
+
+
+
+
 # Create your views here.
 def run_home_agent(request):
     return render(request, 'home.html')
@@ -74,17 +93,11 @@ def follow_conversation(request, conversation_id):
         # Catch error if the token is None, return a Json error
         auth_header = request.headers['Authorization']
         token = auth_header.split(' ')[1] 
-        print(f'This is the conversation ID: {conversation_id}')
         # Get the data from the request body and return a json if any miss indication which fields are needed
         data = json.loads(request.body)
         question = data.get('question')
         document_id = data.get('document_id')
         # agent_id = data.get('agent_id')
-
-
-
-
-
 
         answer = get_document_reader_answer(question=question, document_id=document_id)
         # get the agent model, return an error if something if the agent not exist
@@ -95,16 +108,69 @@ def follow_conversation(request, conversation_id):
         }
         return JsonResponse(response_data)
 
-@sync_to_async
-def async_get_document_reader_answer(question: str, document_id: int):
-    return get_document_reader_answer(question=question, document_id=document_id)
 
-def get_document_reader_answer(question: str, document_id: int):
-    text_document = TextDocument.objects.get(pk=document_id)
-    # get the credentials
-    credentials = ProviderCredentials.objects.get(organization=text_document.organization)
-    # get the content from the document
-    text_document_data = TextDocumentSerializer(text_document).data
-    document_reader_tool = DocumentReader(text_document_data["content"], openai_api_key=credentials.key)
-    answer = document_reader_tool.run(question)
-    return answer
+@csrf_exempt
+def update_text_document(request, document_id):
+    if request.method == "PUT":
+        # Catch error if the token is None, return a Json error
+        auth_header = request.headers.get('Authorization')
+        token = auth_header.split(' ')[1] if auth_header else None
+        user = get_user_from_token(token=token)
+        # Check if the document exists
+        try:
+            text_document = TextDocument.objects.get(id=document_id)
+        except TextDocument.DoesNotExist:
+            return JsonResponse({"error": "Document not found"}, status=404)
+
+        # Check if the user has permission to update the document
+        if text_document.user != user:
+            return JsonResponse({"error": "You do not have permission to update this document"}, status=403)
+
+        # Get the data from the request body and return an error if any required fields are missing
+        data = json.loads(request.body)
+        content = data.get('content')
+        replace = data.get('replace', False)  # Default to False if the 'replace' key is missing
+
+        if not content:
+            return JsonResponse({"error": "Missing 'content' field"}, status=400)
+
+        prev_content = TextDocumentSerializer(text_document).data["content"]
+        # Update the document content
+        if replace:
+            text_document.content = content
+        else:
+            new_content = prev_content + content
+            text_document.content = new_content
+
+        text_document.save()
+
+        response_data = {
+            "message": "Document updated successfully"
+        }
+        return JsonResponse(response_data)
+
+    # Handle other HTTP methods
+    if request.method == "GET":
+        # Catch error if the token is None, return a Json error
+        auth_header = request.headers.get('Authorization')
+        token = auth_header.split(' ')[1] if auth_header else None
+        user = get_user_from_token(token=token)
+        # Check if the document exists
+        try:
+            text_document = TextDocument.objects.get(id=document_id)
+        except TextDocument.DoesNotExist:
+            return JsonResponse({"error": "Document not found"}, status=404)
+
+        # Check if the user has permission to access the document
+        if text_document.user != user:
+            return JsonResponse({"error": "You do not have permission to access this document"}, status=403)
+        text_document_content = TextDocumentSerializer(text_document).data["content"]
+        response_data = {
+            "content": text_document_content
+        }
+        return JsonResponse(response_data)
+
+    # Handle other HTTP methods
+    return JsonResponse({"error": "Invalid method"}, status=405)
+
+
