@@ -1,7 +1,10 @@
 const websocketUrl = 'ws://' + window.location.host + '/ws/conversation/';
 const socket = new WebSocket(websocketUrl);
 
-// Event handler for when the connection is established
+
+
+function main () {
+    // Event handler for when the connection is established
 socket.onopen = function(event) {
     handleConnectionOpen();
 };
@@ -16,6 +19,7 @@ socket.onclose = function(event) {
     handleConnectionClose();
 };
 
+}
 function handleConnectionOpen() {
     console.log("WebSocket connection established!");
     const message = { "message": "Hello" }; // Define the message to send
