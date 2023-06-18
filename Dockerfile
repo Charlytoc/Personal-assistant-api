@@ -21,6 +21,7 @@ COPY . .
 # Run the Django migration
 RUN python manage.py migrate
 
+RUN python manage.py collectstatic --no-input
 # Expose the port that Daphne will run on
 EXPOSE 8000
 
