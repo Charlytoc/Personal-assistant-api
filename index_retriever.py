@@ -11,7 +11,7 @@ from langchain.indexes import VectorstoreIndexCreator
 from langchain.docstore.document import Document
 from langchain.document_loaders.base import BaseLoader
 from langchain.document_loaders.helpers import detect_file_encodings
-
+from langchain.chat_models import ChatOpenAI
 logger = logging.getLogger(__name__)
 
 
@@ -59,11 +59,13 @@ class CustomTextLoader(BaseLoader):
 
 
 class DocumentReader():
-    def __init__(self, document_text: str) -> None:
+    def __init__(self, document_text: str, llm: ChatOpenAI = ChatOpenAI(temperature=0)) -> None:
         self.loader = CustomTextLoader(document_text)
         self.index = VectorstoreIndexCreator().from_loaders([self.loader])
+        self.chat = llm
+        
     def run(self, question_to_answer: str):
-        return self.index.query(question_to_answer)
+        return self.index.query(question_to_answer, llm=self.chat)
     
 document_reader = DocumentReader(document_text='''
 Madam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.  
