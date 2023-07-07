@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'api.authenticate',
     'api.aitools',
     'api.services',
+    'api.learning'
 ]
 
 MIDDLEWARE = [

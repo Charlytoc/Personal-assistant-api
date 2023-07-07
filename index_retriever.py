@@ -67,7 +67,7 @@ class DocumentReader():
     def run(self, question_to_answer: str):
         return self.index.query(question_to_answer, llm=self.chat)
     
-document_reader = DocumentReader(document_text='''
+document_text = '''
 Madam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.  
 
 Last year COVID-19 kept us apart. This year we are finally together again. 
@@ -792,7 +792,10 @@ One America.
 The United States of America. 
 
 May God bless you all. May God protect our troops.
-''')
+'''
 
 
+
+
+document_reader = DocumentReader(document_text=document_text)
 print_in_color(document_reader.run("What did the president say about Ketanji Brown Jackson"))
