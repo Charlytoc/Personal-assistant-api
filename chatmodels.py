@@ -5,7 +5,7 @@ from langchain.prompts.chat import (
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate,
 )
-from functions import print_in_color
+# from functions import print_in_color
 import os
 from dotenv import load_dotenv
 

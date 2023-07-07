@@ -23,6 +23,7 @@ from .aitools.views import run_home_agent, start_conversation, conversation
 apps = [
     ('auth/', 'api.authenticate.urls', 'auth'),
     ('v1/aitools/', 'api.aitools.urls', 'aitools'),
+    ('v1/learning/', 'api.learning.urls', 'learning'),
 ]
 
 urlpatterns_apps = [path(url, include(urlconf, namespace=namespace)) for url, urlconf, namespace in apps]
