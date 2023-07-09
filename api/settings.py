@@ -157,3 +157,40 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',
     },
 }
+
+
+# settings.py
+import structlog
+
+# Structlog configuration
+structlog.configure(
+    processors=[
+        structlog.stdlib.filter_by_level,  # Decide which log levels to process
+        structlog.stdlib.add_logger_name,  # Add the logger name to the log entry
+        structlog.stdlib.add_log_level,  # Add the log level to the log entry
+        structlog.stdlib.PositionalArgumentsFormatter(),
+        structlog.processors.TimeStamper(fmt="iso"),  # Add the timestamp to the log entry
+        structlog.processors.StackInfoRenderer(),
+        structlog.processors.format_exc_info,  # Provide traceback for `exc_info` argument
+        structlog.processors.JSONRenderer()  # Render the log as a JSON string
+    ],
+    context_class=dict,
+    logger_factory=structlog.stdlib.LoggerFactory(),
+    wrapper_class=structlog.stdlib.BoundLogger,
+    cache_logger_on_first_use=True,
+)
+
+# Django's logging configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',  # Or whatever level you want
+    },
+}

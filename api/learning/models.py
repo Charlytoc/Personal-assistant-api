@@ -19,7 +19,7 @@ class Profile(models.Model):
                 ('HUMAN', 'Human'),
                 ('AI', 'AI'),
         )
-        user = models.OneToOneField(User, on_delete=models.CASCADE)
+        user = models.ForeignKey(User, on_delete=models.CASCADE)
         username = models.CharField(max_length=255)
         communities = models.ManyToManyField(Community, blank=True)
         is_public = models.BooleanField(default=True)
@@ -32,24 +32,27 @@ class Profile(models.Model):
 class StudyPlan(models.Model):
         created_by = models.ForeignKey(Profile, on_delete=models.CASCADE)
         title = models.CharField(max_length=255)
+        suggested_title = models.CharField(max_length=255, null=True, blank=True)
         description = models.TextField()
+        ai_description = models.TextField(null=True, blank=True)
         communities = models.ManyToManyField(Community,blank=True)
         created_at = models.DateTimeField(auto_now_add=True)
         updated_at = models.DateTimeField(auto_now=True)
 
 class Section(models.Model):
         title = models.CharField(max_length=255)
-        objectives = models.TextField()
+        objective = models.TextField()
         study_plan = models.ForeignKey(StudyPlan, on_delete=models.CASCADE)
         created_by = models.ForeignKey(Profile, on_delete=models.CASCADE)
-
         created_at = models.DateTimeField(auto_now_add=True)
         updated_at = models.DateTimeField(auto_now=True)
 
 class Topic(models.Model):
         title = models.CharField(max_length=255)
         explanation = models.TextField()
-
+        section = models.ForeignKey(Section, on_delete=models.CASCADE, null=True, blank=True)
+        
+        objective = models.TextField(null=True, blank=True)
         created_by = models.ForeignKey(Profile, on_delete=models.CASCADE)
         created_at = models.DateTimeField(auto_now_add=True)
         updated_at = models.DateTimeField(auto_now=True)
@@ -62,7 +65,7 @@ class Discussion(models.Model):
 
 class Comment(models.Model):
         profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-        threat = models.ForeignKey(Discussion, on_delete=models.CASCADE)
+        discussion = models.ForeignKey(Discussion, on_delete=models.CASCADE)
         text = models.TextField()
         created_at = models.DateTimeField(auto_now_add=True)
         updated_at = models.DateTimeField(auto_now=True)
