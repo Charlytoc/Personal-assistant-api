@@ -6,3 +6,10 @@ class SmallStudyPlanSerializer(Serializer):
     id = Field()
     title = Field()
     description = Field()
+
+
+class SmallSectionSerializer(Serializer):
+    id = Field()
+    title = Field()
+    objectives = Field()
+
