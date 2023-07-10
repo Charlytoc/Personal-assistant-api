@@ -2,7 +2,7 @@ from langchain.chains import RetrievalQA
 from langchain.llms import OpenAI
 from functions import print_in_color
 import os
-
+from langchain.vectorstores import Chroma
 from typing import Any, Dict, List, Optional
 import logging
 from typing import List, Optional
@@ -794,8 +794,36 @@ The United States of America.
 May God bless you all. May God protect our troops.
 '''
 
+from langchain.embeddings.openai import OpenAIEmbeddings
+embedding = OpenAIEmbeddings()
+
+loaded_documents = CustomTextLoader(plain_text=document_text)
+print(loaded_documents)
+docs = []
+# for loader in loaded_documents:
+#     docs.extend(loader.load())
+
+docs.extend(loaded_documents.load())
+# print(docs)
 
 
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size = 1500,
+    chunk_overlap = 150
+)
+splits = text_splitter.split_documents(docs)
 
-document_reader = DocumentReader(document_text=document_text)
-print_in_color(document_reader.run("What did the president say about Ketanji Brown Jackson"))
+print_in_color(
+len(splits))
+
+persist_directory = 'docs/hello/'
+
+vectordb = Chroma.from_documents(
+    documents=splits,
+    embedding=embedding,
+    persist_directory=persist_directory
+)
+print(vectordb._collection.count())
+# document_reader = DocumentReader(document_text=document_text)
+# print_in_color(document_reader.run("What did the president say about Ketanji Brown Jackson"))
