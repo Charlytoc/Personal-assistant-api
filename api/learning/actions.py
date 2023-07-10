@@ -206,10 +206,15 @@ def create_topics_for_a_section(section: Section):
                 created_by=section.created_by,
                 section=section
             )
-            get_topic_content(topic=new_topic)
+            # get_topic_content(topic=new_topic)
 
         total_cost = callback.total_cost
         total_tokens = callback.total_tokens
+        study_plan = section.study_plan
+        print(study_plan.title, "THIS IS THE TITLE OF THE STUDY PLAN")
+        study_plan.total_spent += total_cost
+        print(section.total_spent)
+        study_plan.save()
         print_in_color(f'Spend: {total_cost} \n Tokens: {total_tokens}', 'red')
     
 
