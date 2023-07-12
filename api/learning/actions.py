@@ -206,7 +206,7 @@ def create_topics_for_a_section(section: Section):
                 created_by=section.created_by,
                 section=section
             )
-            get_topic_content(topic=new_topic)
+            # get_topic_content(topic=new_topic)
 
         total_cost = callback.total_cost
         total_tokens = callback.total_tokens
