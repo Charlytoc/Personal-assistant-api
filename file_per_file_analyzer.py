@@ -78,7 +78,7 @@ def clone_and_explore_repository(repo_url, target_dir, explore_items, output_fil
     shutil.rmtree(target_dir)
 
 def generate_directory_structure(directory, explore_items, indentation=""):
-    directory_structure = ""
+    directory_structure = ""  
     for item in explore_items:
         item_path = os.path.join(directory, item)
         if os.path.isdir(item_path):
