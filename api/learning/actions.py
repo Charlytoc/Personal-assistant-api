@@ -30,36 +30,26 @@ def get_user_profile(user: User) -> Profile:
 
 def get_better_studyplan_description(study_plan_description: str, number_of_sections: str):
     _template = '''You are an useful teacher, your are in charge of building an awesome study plan
-    for a student. This is the student study plan: {study_plan_description}
+    for a student. This is what the student wants to learn: {study_plan_description}
     
-    Rewrite this description and included detailed information of the necessary steps to succcesful
-    get the objectives of the study plan.
+    Write a great study plan based in the student requirements, the goals is to have an objective 
+    of what to study next.
 
     To make your work the best follow this steps:
 
-    1. Think about which is the most important objective of the study plan
+    1. Think about which is the most important objective of the study plan.
     2. Think in way to structure the plan in sections with smaller objectives
 
     Comments between ``` are to help you understand your task
     Give your answer in the following format:
 
     _start_
-    Study plan title ```Write a descriptive title for the study plan```
-
-    General objective ```Write here a general objective for the study plan```
-
-    ```In the part below write each section for the study plan mentioning an objective, anything else.```
-    Section_1_title
-        objective: 
-
-    Section_2_title
-        objective: 
-    ...
-
-    ```No more than {number_of_sections} sections are necessary, think about what is the best way to structure the plan```
+    ```Write a descriptive title for the study plan here and include the following tag``` 
+    _tit_
+    ```Write here a general objective for the study plan, also make mention of steps to successfully reach the goals```
     _end_
 
-    The _start_ and _end_ tags are mandatory. Always return your answer in the student language
+    The _start_, _end_ and _tit_ tags are mandatory. Always return your answer in the student language
     '''
 
     better_description_agent = SinglePromptAgent(template=_template)
