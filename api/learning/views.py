@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .models import StudyPlan
-from .serializers import SmallStudyPlanSerializer, SmallSectionSerializer
+from .serializers import SmallStudyPlanSerializer, SmallSectionSerializer,BigStudyPlanSerializer
 from django.views.generic import ListView
 
 from .models import StudyPlan, Section
@@ -25,14 +25,10 @@ class StudyPlanView(View):
         '''
         This view its already trusted
         '''
-        
         token_key = request.headers.get('Authorization').split()[1]
         user = get_user_from_token(token_key)
-
         study_plans = StudyPlan.objects.filter(created_by__user=user)
-
         study_plan_data = SmallStudyPlanSerializer(study_plans, many=True).data
-     
         return JsonResponse(study_plan_data, safe=False)
     
     def post(self, request, *args, **kwargs):
@@ -62,21 +58,18 @@ class StudyPlanView(View):
                 create_sections_from_studyplan(
                 study_plan=study_plan
                 )
-        # if create_topics:
-        #     create_topics_for_all_studyplan_sections(
-        #         study_plan=study_plan
-        #     )
-
         return JsonResponse({'study_plan_id': study_plan.id})
         
-#     def put(self, request, *args, **kwargs):
-#         # Not tested
-#         data = json.loads(request.body)
-#         StudyPlan.objects.filter(pk=kwargs['pk']).update(**data)
-#         return JsonResponse({'message': 'StudyPlan updated successfully'})
+@method_decorator(csrf_exempt, name='dispatch')
+class AllStudyPlanView(View):
+    def get(self, request, *args, **kwargs):
+        '''
+        This view its already trusted
+        '''
+        study_plans = StudyPlan.objects.all()
+        study_plan_data = BigStudyPlanSerializer(study_plans, many=True).data
+        return JsonResponse(study_plan_data, safe=False)
     
-
-
 
 @method_decorator(csrf_exempt, name='dispatch')
 class SectionView(View):
