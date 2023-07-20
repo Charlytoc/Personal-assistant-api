@@ -1,6 +1,9 @@
 # Use the official Python image as the base image
 FROM python:3.9
 
+
+RUN apt-get update && apt-get install -y redis-server
+
 # Set the working directory in the container
 WORKDIR /app
 
@@ -8,7 +11,7 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install the Python dependencies
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Install ZSH, Git, and Oh My Zsh
 RUN apt-get update && \

@@ -12,6 +12,7 @@ class ProfileAdmin(admin.ModelAdmin):
         list_display = [field.name for field in Profile._meta.fields]
         filter_horizontal = ('communities',)
 admin.site.register(Profile, ProfileAdmin)
+
 class StudyPlanAdmin(admin.ModelAdmin):
         actions = ['create_sections_from_study_plan', 'create_studyplan_description']
         

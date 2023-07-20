@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+
+  redis:
+    image: redis
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A project worker --loglevel=info
+    depends_on:
+      - django
+      - redis
