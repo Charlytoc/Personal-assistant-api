@@ -277,11 +277,11 @@ def get_topic_content(topic: Topic):
 
 def create_studyplan_description_from_studyplan(study_plan: StudyPlan):
     with get_openai_callback() as callback:
-        ai_description = get_better_studyplan_description(study_plan.description, study_plan.number_of_sections)
+        ai_description = get_better_studyplan_description(study_plan.description)
         title, description = separate_text(ai_description, '_tit_')
         study_plan.ai_description = description
         study_plan.suggested_title = title
-        
+
         study_plan.save()
         total_cost = callback.total_cost
         total_tokens = callback.total_tokens
