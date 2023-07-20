@@ -28,7 +28,7 @@ def get_user_profile(user: User) -> Profile:
     return profile
 
 
-def get_better_studyplan_description(study_plan_description: str, number_of_sections: str):
+def get_better_studyplan_description(study_plan_description: str):
     _template = '''You are an useful teacher, your are in charge of building an awesome study plan
     for a student. This is what the student wants to learn: {study_plan_description}
     
@@ -47,13 +47,15 @@ def get_better_studyplan_description(study_plan_description: str, number_of_sect
     ```Write a descriptive title for the study plan here and include the following tag``` 
     _tit_
     ```Write here a general objective for the study plan, also make mention of steps to successfully reach the goals```
+
+    ```Write a description for the study plan here here```
     _end_
 
     The _start_, _end_ and _tit_ tags are mandatory. Always return your answer in the student language
     '''
 
     better_description_agent = SinglePromptAgent(template=_template)
-    return better_description_agent.run(study_plan_description=study_plan_description, number_of_sections=number_of_sections)
+    return better_description_agent.run(study_plan_description=study_plan_description)
 
 
 def separate_text(text:str, separator:str):
@@ -61,24 +63,24 @@ def separate_text(text:str, separator:str):
     return separated_text
 
 def get_sections_from_study_plan(study_plan_description: str):
-    _template = '''You are an useful teacher, your are in charge of help an student to extend the description of the 
-    sections for a certain study plan.
+    _template = '''You are an useful teacher, your are in charge of help an student to extend to write the necessary information
+    section to successfully learn something in a study plan.
 
     This is the student study plan: {study_plan_description}
     
-    Rewrite the sections of the plan in a more extended way to make it easy to investigate and execute
+    Write the sections of the plan in an extended way to make it easy to investigate and execute
     succesfully the study plan.
 
     To make your work the best follow this steps:
 
-    1. Think if the sections are or not correct for the study plan's description
-    2. Return the correct sections with an extended objective
+    1. Think in the correct sections to divide in an incremental way the study plan
+    2. Return the correct sections with an extended objective.
 
     Comments between ``` are to help you understand your task
     Give your answer in the following format:
 
     _start_
-    Section 1: An awesome title _tit_ ``Always include this _tit_ tag after each section title``
+    Section 1: An awesome title for the section _tit_ ``Always include this _tit_ tag after each section title``
     Objective ``An objective to accomplish in this section``
     _separator_ ``Include always this _separator_ after each section to properly separate them after``
     Section 2: Another awesome title _tit_ ``Please remember to include _tit_
@@ -276,7 +278,10 @@ def get_topic_content(topic: Topic):
 def create_studyplan_description_from_studyplan(study_plan: StudyPlan):
     with get_openai_callback() as callback:
         ai_description = get_better_studyplan_description(study_plan.description, study_plan.number_of_sections)
-        study_plan.ai_description = ai_description
+        title, description = separate_text(ai_description, '_tit_')
+        study_plan.ai_description = description
+        study_plan.suggested_title = title
+        
         study_plan.save()
         total_cost = callback.total_cost
         total_tokens = callback.total_tokens
