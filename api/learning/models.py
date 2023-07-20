@@ -34,6 +34,7 @@ class StudyPlan(models.Model):
         title = models.CharField(max_length=255)
         suggested_title = models.CharField(max_length=255, null=True, blank=True)
         description = models.TextField()
+        number_of_sections = models.IntegerField(default=5)
         total_spent = models.DecimalField(decimal_places=5, default=0.00, max_digits=5)
         ai_description = models.TextField(null=True, blank=True)
         communities = models.ManyToManyField(Community,blank=True)

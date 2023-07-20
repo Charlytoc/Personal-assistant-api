@@ -28,7 +28,7 @@ def get_user_profile(user: User) -> Profile:
     return profile
 
 
-def get_better_studyplan_description(study_plan_description: str):
+def get_better_studyplan_description(study_plan_description: str, number_of_sections: str):
     _template = '''You are an useful teacher, your are in charge of building an awesome study plan
     for a student. This is the student study plan: {study_plan_description}
     
@@ -56,14 +56,14 @@ def get_better_studyplan_description(study_plan_description: str):
         objective: 
     ...
 
-    ```No more than ten sections are necessary, think about what is the best way to structure the plan```
+    ```No more than {number_of_sections} sections are necessary, think about what is the best way to structure the plan```
     _end_
 
     The _start_ and _end_ tags are mandatory. Always return your answer in the student language
     '''
 
     better_description_agent = SinglePromptAgent(template=_template)
-    return better_description_agent.run(study_plan_description=study_plan_description)
+    return better_description_agent.run(study_plan_description=study_plan_description, number_of_sections=number_of_sections)
 
 
 def separate_text(text:str, separator:str):
@@ -96,7 +96,7 @@ def get_sections_from_study_plan(study_plan_description: str):
     _end_
 
     The _start_,_end_, _tit_ and _separator_ tags are mandatory and its so important to add them. 
-    Always return your answer in the student language
+    Always return your answer in the student language.
     '''
 
     better_sections_agent = SinglePromptAgent(template=_template)
@@ -285,7 +285,7 @@ def get_topic_content(topic: Topic):
 
 def create_studyplan_description_from_studyplan(study_plan: StudyPlan):
     with get_openai_callback() as callback:
-        ai_description = get_better_studyplan_description(study_plan.description)
+        ai_description = get_better_studyplan_description(study_plan.description, study_plan.number_of_sections)
         study_plan.ai_description = ai_description
         study_plan.save()
         total_cost = callback.total_cost
