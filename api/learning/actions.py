@@ -44,11 +44,11 @@ def get_better_studyplan_description(study_plan_description: str):
     Give your answer in the following format:
 
     _start_
-    ```Write a descriptive title for the study plan here and include the following tag``` 
-    _tit_
-    ```Write here a general objective for the study plan, also make mention of steps to successfully reach the goals```
+    Title of the study plan _tit_ ```Write a descriptive title for the study plan here and include the following tag``` 
+    
+    The objective of this study plan is... ```Write here a general objective for the study plan, also make mention of steps to successfully reach the goals```
 
-    ```Write a description for the study plan here here```
+    We will get the hands on... ```Write an interesting description for the study plan```
     _end_
 
     The _start_, _end_ and _tit_ tags are mandatory. Always return your answer in the student language
