@@ -29,7 +29,7 @@ def get_user_profile(user: User) -> Profile:
 
 
 def get_better_studyplan_description(study_plan_description: str):
-    _template = '''You are an useful teacher, your are in charge of building an awesome study plan
+    _template = '''You are an useful teacher, you are in charge of building an awesome study plan
     for a student. This is what the student wants to learn: {study_plan_description}
     
     Write a great study plan based in the student requirements, the goals is to have an objective 
@@ -39,16 +39,23 @@ def get_better_studyplan_description(study_plan_description: str):
 
     1. Think about which is the most important objective of the study plan.
     2. Think in way to structure the plan in sections with smaller objectives
+    3. No more than four sections are necessary
 
-    Comments between ``` are to help you understand your task
-    Give your answer in the following format:
+    Comments between `` are to help you understand your task
+    Give your answer in the format of the following example:
 
     _start_
-    Title of the study plan _tit_ ```Write a descriptive title for the study plan here and include the _tit_ tag to properly handle the title``` 
+    Learn Django from scratch _tit_   `Write a descriptive title for the study plan here and include the _tit_  tag  to properly handle the title`
     
-    The objective of this study plan is... ```Write here a general objective for the study plan, also make mention of steps to successfully reach the goals```
-
-    We will get the hands on... ```Write an interesting description for the study plan```
+    ``Write here a general objective for the study plan, also make mention of steps to successfully reach the goals``
+    The objective of this study plan is to learn Django from scratch and develop a hello world application.
+      We will get hands on with Django by following these steps: 
+      
+      1. Introduction to Django - Learn about Django and its features - Understand the MVC (Model-View-Controller) architecture - Install Django on your local machine 
+      2. Setting up a Django Project - Create a new Django project - Understand the project structure and configuration files - Run the development server and access the default Django page 
+      3. Creating a Hello World Application - Create a new Django app within the project - Define a URL pattern and view function for the hello world page - Create a template for the hello world page - Configure the URL routing to display the hello world page 
+      4. Working with Models and Databases - Define a model for a simple data entity - Create database tables based on the model 
+`
     _end_
 
     The _start_, _end_ and _tit_ tags are mandatory. Always return your answer in the student language
