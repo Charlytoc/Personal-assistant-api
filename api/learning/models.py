@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import uuid
-
+from django.utils.text import slugify
 
 class Community(models.Model):
         name = models.CharField(max_length=255)
@@ -32,6 +32,7 @@ class Profile(models.Model):
 class StudyPlan(models.Model):
         created_by = models.ForeignKey(Profile, on_delete=models.CASCADE)
         title = models.CharField(max_length=255)
+        slug = models.CharField(max_length=255, null=True, blank=True)
         suggested_title = models.CharField(max_length=255, null=True, blank=True)
         description = models.TextField()
         number_of_sections = models.IntegerField(default=5)
@@ -40,15 +41,24 @@ class StudyPlan(models.Model):
         communities = models.ManyToManyField(Community,blank=True)
         created_at = models.DateTimeField(auto_now_add=True)
         updated_at = models.DateTimeField(auto_now=True)
-
+        def save(self, *args, **kwargs):
+                
+                # Generate slug based on name
+                self.slug = slugify(self.title)
+                super().save(*args, **kwargs)
 class Section(models.Model):
         title = models.CharField(max_length=255)
+        slug = models.CharField(max_length=255, null=True, blank=True)
         objective = models.TextField()
         study_plan = models.ForeignKey(StudyPlan, on_delete=models.CASCADE)
         created_by = models.ForeignKey(Profile, on_delete=models.CASCADE)
         created_at = models.DateTimeField(auto_now_add=True)
         updated_at = models.DateTimeField(auto_now=True)
-
+        def save(self, *args, **kwargs):
+                # Generate slug based on name
+                self.slug = slugify(self.title)
+                super().save(*args, **kwargs)
+                
 class Topic(models.Model):
         title = models.CharField(max_length=255)
         explanation = models.TextField()

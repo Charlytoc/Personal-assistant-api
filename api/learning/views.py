@@ -12,7 +12,7 @@ from django.utils.decorators import method_decorator
 from django.core import serializers
 from api.aitools.actions import get_user_from_token
 import json
-from .actions import get_user_profile, get_better_studyplan_description, create_sections_from_studyplan, create_topics_for_all_studyplan_sections
+from .actions import separate_text, get_user_profile, get_better_studyplan_description, create_sections_from_studyplan, create_topics_for_all_studyplan_sections
 
 from structlog import get_logger
 
@@ -45,14 +45,16 @@ class StudyPlanView(View):
         title = data.get('title', '')
         description = data.get('description', '')
         create_sections = data.get('create_sections', False)
-        # create_topics = data.get('create_topics', False)
+
         study_plan = StudyPlan(
               created_by = profile,
               title=title,
               description=description
         )
         ai_description = get_better_studyplan_description(description)
-        study_plan.ai_description = ai_description
+        title, description = separate_text(ai_description, '_tit_')
+        study_plan.ai_description = description
+        study_plan.suggested_title = title
         study_plan.save()
         if create_sections:
                 create_sections_from_studyplan(
@@ -100,9 +102,9 @@ class SectionView(View):
 
 
 class SectionListView(View):
-    def get(self, request, study_plan_id):
-        study_plan = get_object_or_404(StudyPlan, id=study_plan_id)
-        sections = study_plan.section_set.all()
-        serializer_data = SmallSectionSerializer(sections, many=True).data
+    def get(self, request, study_plan_slug):
+        study_plan = get_object_or_404(StudyPlan, slug=study_plan_slug)
+        # sections = study_plan.section_set.all()
+        serializer_data = BigStudyPlanSerializer(study_plan).data
         return JsonResponse(serializer_data, safe=False)
     

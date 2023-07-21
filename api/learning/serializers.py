@@ -9,16 +9,26 @@ class SmallStudyPlanSerializer(Serializer):
     id = Field()
     title = Field()
     description = Field()
+
+class SmallSectionSerializer(Serializer):
+    id = Field()
+    title = Field()
+    objective = Field()
+
+
+
 class BigStudyPlanSerializer(Serializer):
     id = Field()
     title = Field()
+    slug= Field()
+    sections = MethodField()
     suggested_title = Field()
     description = Field()
     created_by = SmallProfileSerializer()
     ai_description = Field()
 
-class SmallSectionSerializer(Serializer):
-    id = Field()
-    title = Field()
-    objectives = Field()
-
+    def get_sections(self, obj):
+        sections = obj.section_set.all()
+        sections_data = SmallSectionSerializer(sections, many=True).data
+        return sections_data
+    
