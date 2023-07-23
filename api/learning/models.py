@@ -72,6 +72,7 @@ class Topic(models.Model):
 class Discussion(models.Model):
         created_by = models.ForeignKey(Profile, on_delete=models.CASCADE)
         topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+        text = models.TextField(null=True, blank=True)
         created_at = models.DateTimeField(auto_now_add=True)
         updated_at = models.DateTimeField(auto_now=True)
 

@@ -1,5 +1,5 @@
 from api.learning.classes import SinglePromptAgent
-from .models import Section, StudyPlan, Profile, User, Topic
+from .models import Section, StudyPlan, Profile, User, Topic, Discussion,Comment
 from langchain.callbacks import get_openai_callback
 
 def print_in_color(text, color):
@@ -58,7 +58,7 @@ def get_better_studyplan_description(study_plan_description: str):
 `
     _end_
 
-    The _start_, _end_ and _tit_ tags are mandatory. Always return your answer in the student language
+    The _start_, _end_ and _tit_ tags are mandatory. Always return your answer in the language of the student description
     '''
 
     better_description_agent = SinglePromptAgent(template=_template)
@@ -175,8 +175,6 @@ def get_topics_from_section(section_objective: str, section_title: str, study_pl
                              section_objective=section_objective, 
                              section_title=section_title)
 
-
-
 def create_topics_for_a_section(section: Section):
     with get_openai_callback() as callback:
         topics = get_topics_from_section(study_plan_description=section.study_plan.ai_description, 
@@ -205,14 +203,13 @@ def create_topics_for_a_section(section: Section):
                 created_by=section.created_by,
                 section=section
             )
-            get_topic_content(topic=new_topic)
+            # get_topic_content(topic=new_topic)
 
         total_cost = callback.total_cost
         total_tokens = callback.total_tokens
         study_plan = section.study_plan
-        print(study_plan.title, "THIS IS THE TITLE OF THE STUDY PLAN")
-        study_plan.total_spent += total_cost
-        print(section.total_spent)
+        # study_plan.total_spent += total_cost
+        # print(section.total_spent)
         study_plan.save()
         print_in_color(f'Spend: {total_cost} \n Tokens: {total_tokens}', 'red')
     
@@ -240,10 +237,10 @@ def create_topics_for_all_studyplan_sections(study_plan: StudyPlan):
         return True
         
     
-# def callback_how_to():
-#     with get_openai_callback() as callback:
-#         total_cost = callback.total_cost
-#         total_tokens = callback.total_tokens
+def callback_how_to():
+    with get_openai_callback() as callback:
+        total_cost = callback.total_cost
+        total_tokens = callback.total_tokens
 
 
 
@@ -278,9 +275,6 @@ def get_topic_content(topic: Topic):
     explanation = topic_writter.run(topic_objective=topic.objective, topic_title=topic.title, section_description=topic.section.objective)
     topic.explanation = explanation
     topic.save()
-    # print_in_color()
-
-
 
 def create_studyplan_description_from_studyplan(study_plan: StudyPlan):
     with get_openai_callback() as callback:
@@ -293,3 +287,46 @@ def create_studyplan_description_from_studyplan(study_plan: StudyPlan):
         total_cost = callback.total_cost
         total_tokens = callback.total_tokens
         print_in_color(f'Spend: {total_cost} \n Tokens: {total_tokens}', 'red')
+
+
+def comment_with_ai_from_topic_and_discussion(discussion: Discussion):
+    _template = """
+    You are an useful teacher. You are in a class about a certain topic. This is your class
+    content: {topic_explanation}
+
+    The Q&A session start, and student start a new discussion.
+
+    The student says: {discussion_text}
+
+    Answer in a {explanation_tone} manner
+
+    Give your answer in the following format:
+
+    _start_
+    Your answer here
+    _end_
+
+    
+    """
+    explanation_tone = 'funny and objective'
+    discussion_agent = SinglePromptAgent(template=_template)
+    ai_comment = discussion_agent.run(
+        topic_explanation=discussion.topic.explanation,
+        discussion_text=discussion.text,
+        explanation_tone=explanation_tone
+    )
+    return ai_comment
+
+
+def create_comment(profile:Profile, discussion:Discussion, text):
+    new_comment = Comment(
+        profile=profile,
+        discussion=discussion,
+        text=text,
+    )
+
+    # Save the new_comment to the database
+    new_comment.save()
+
+    # Optionally, you can return the created comment
+    return new_comment

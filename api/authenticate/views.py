@@ -26,7 +26,6 @@ class LoginView(View):
         if not email or not password:
             return HttpResponseBadRequest('Email and password must be provided.')
 
-        # Try to find the user
         User = get_user_model()
         try:
             user = User.objects.get(email=email)
@@ -34,8 +33,8 @@ class LoginView(View):
             return HttpResponseBadRequest('Invalid email.')
 
         # Check if user is active
-        if not user.is_active:
-            return HttpResponseBadRequest('User account is inactive.')
+        # if not user.is_active:
+        #     return HttpResponseBadRequest('User account is inactive.')
 
         # Check the password
         user = authenticate(request, username=email, password=password)
