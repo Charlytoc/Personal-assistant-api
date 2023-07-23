@@ -128,7 +128,7 @@ def create_sections_from_studyplan(study_plan: StudyPlan):
         total_cost = callback.total_cost
         total_tokens = callback.total_tokens
         print_in_color(f'Spend: {total_cost} \n Tokens: {total_tokens}', 'red')
-        return True
+        return study_plan
 
 
 # First: Make a list of at least 5 different topics to separated the section, imagine each topics as a step of learning
