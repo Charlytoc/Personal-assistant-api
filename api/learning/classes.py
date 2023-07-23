@@ -29,7 +29,7 @@ class SinglePromptAgent:
         
         self.system_template = template
         # The temperature parameter controls the randomness of the model's output, with a lower temperature resulting in more deterministic output.
-        self.chat = ChatOpenAI(temperature=temperature, model='gpt-4')
+        self.chat = ChatOpenAI(temperature=temperature)
 
         self.system_message_prompt = SystemMessagePromptTemplate.from_template(self.system_template)
 

@@ -199,7 +199,6 @@ def create_topics_for_a_section(section: Section):
             new_topic = Topic.objects.create(
                 title=title,
                 objective=objective,
-                explanation='EMPTY FOR THE MOMENT',
                 created_by=section.created_by,
                 section=section
             )
@@ -275,6 +274,7 @@ def get_topic_content(topic: Topic):
     explanation = topic_writter.run(topic_objective=topic.objective, topic_title=topic.title, section_description=topic.section.objective)
     topic.explanation = explanation
     topic.save()
+    return topic
 
 def create_studyplan_description_from_studyplan(study_plan: StudyPlan):
     with get_openai_callback() as callback:

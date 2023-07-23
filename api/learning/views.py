@@ -14,9 +14,9 @@ from api.aitools.actions import get_user_from_token
 
 from .actions import (separate_text, create_topics_for_a_section, get_user_profile, get_better_studyplan_description,
                       create_sections_from_studyplan, create_topics_for_all_studyplan_sections, create_studyplan_description_from_studyplan,
-                      comment_with_ai_from_topic_and_discussion, create_comment)
+                      comment_with_ai_from_topic_and_discussion, create_comment,get_topic_content)
 from .models import Discussion, Profile, Section, StudyPlan, Topic, Comment
-from .serializers import (BigSectionSerializer, BigStudyPlanSerializer, SmallSectionSerializer, SmallStudyPlanSerializer,DiscussionSerializer)
+from .serializers import (BigSectionSerializer, BigStudyPlanSerializer, SmallSectionSerializer, SmallStudyPlanSerializer,DiscussionSerializer,TopicSerializer)
 
 logger = get_logger()
 
@@ -71,7 +71,6 @@ class AllStudyPlanView(View):
         study_plan_data = BigStudyPlanSerializer(study_plans, many=True).data
         return JsonResponse(study_plan_data, safe=False)
     
-
 @method_decorator(csrf_exempt, name='dispatch')
 class SectionView(View):
     def get(self, request, section_id):
@@ -93,7 +92,6 @@ class SectionView(View):
         # print(serializer_data)
         return JsonResponse(serializer_data, safe=False)
     
-
 @method_decorator(csrf_exempt, name='dispatch')
 class SectionListView(View):
     def get(self, request, study_plan_slug):
@@ -110,7 +108,6 @@ class SectionListView(View):
 from .serializers import ProfileSerializer
 from .models import Profile
 
-
 class ProfileView(View):
     def get(self, request, *args, **kwargs):
         profile = Profile.objects.get(user=request.user)
@@ -123,7 +120,6 @@ class ProfileView(View):
         serializer = ProfileSerializer(profile)
         return JsonResponse(serializer.data, safe=False)
     
-
 @method_decorator(csrf_exempt, name='dispatch')  # Only if you want to exempt from CSRF protection
 class CreateDiscussionView(View):
     def post(self, request, *args, **kwargs):
@@ -155,8 +151,6 @@ class CreateDiscussionView(View):
         except ObjectDoesNotExist:
             return HttpResponseBadRequest("Topic does not exist.")
         
-
-
 @method_decorator(csrf_exempt, name='dispatch') 
 class CommentCreateView(View):
 
@@ -183,3 +177,19 @@ class CommentCreateView(View):
         )
         data= DiscussionSerializer(discussion).data
         return JsonResponse(data, status=201)
+    
+@method_decorator(csrf_exempt, name='dispatch') 
+class TopicContentView(View):
+    def post(self, request, *args, **kwargs):
+        token_key = request.headers.get('Authorization').split()[1]
+        user = get_user_from_token(token_key)
+        profile = get_user_profile(user)
+
+        data = json.loads(request.body)
+        topic_id = data.get('topic_id')
+
+        topic = Topic.objects.get(pk=topic_id)
+        topic = get_topic_content(topic)
+        serializer_data = TopicSerializer(topic).data
+        # print(serializer_data)
+        return JsonResponse(serializer_data, status=200)

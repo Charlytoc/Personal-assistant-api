@@ -61,7 +61,7 @@ class Section(models.Model):
                 
 class Topic(models.Model):
         title = models.CharField(max_length=255)
-        explanation = models.TextField()
+        explanation = models.TextField(default='')
         section = models.ForeignKey(Section, on_delete=models.CASCADE, null=True, blank=True)
         
         objective = models.TextField(null=True, blank=True)
