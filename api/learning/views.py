@@ -99,9 +99,10 @@ class SectionListView(View):
         # sections = study_plan.section_set.all()
         serializer_data = BigStudyPlanSerializer(study_plan).data
         return JsonResponse(serializer_data, safe=False)
+    
     def post(self, request, study_plan_slug):
         study_plan = get_object_or_404(StudyPlan, slug=study_plan_slug)
-        create_sections_from_studyplan(study_plan)
+        study_plan = create_sections_from_studyplan(study_plan)
         serializer_data = BigStudyPlanSerializer(study_plan).data
         return JsonResponse(serializer_data, safe=False)
     
