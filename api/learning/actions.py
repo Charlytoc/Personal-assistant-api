@@ -94,7 +94,9 @@ def get_sections_from_study_plan(study_plan_description: str):
     Objective
     _end_
 
-    The _start_,_end_, _tit_ and _separator_ tags are mandatory and its so important to add them. 
+    The _start_,_end_, _tit_ and _separator_ tags are mandatory and its so important to add them
+    as them are, don't modify the tags. 
+    
     Always return your answer in the student language.
     '''
 
