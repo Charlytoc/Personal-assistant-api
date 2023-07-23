@@ -1,12 +1,15 @@
 from django.urls import path
-from .views import StudyPlanView, SectionView, SectionListView, AllStudyPlanView
+from .views import (StudyPlanView, SectionView, SectionListView, AllStudyPlanView, CreateDiscussionView, CommentCreateView,TopicContentView)
 
 app_name = 'learning'
 
 urlpatterns = [
     path('me/studyplan', StudyPlanView.as_view(), name='study_plan_view'),
     path('studyplan', AllStudyPlanView.as_view(), name='AllStudyPlanView'),
-    path('studyplan/<int:study_plan_id>/sections', SectionListView.as_view(), name='section_list_view'),
-    path('section', SectionView.as_view(), name='section_view'),
+    path('studyplan/<str:study_plan_slug>', SectionListView.as_view(), name='section_list_view'),
+    path('section/<int:section_id>', SectionView.as_view(), name='section_view'),
+    path('discussion', CreateDiscussionView.as_view(), name='discussion_view'),
+    path('comment', CommentCreateView.as_view(), name='comment_view'),
+    path('topic', TopicContentView.as_view(), name='topic_view'),
 ]
 
