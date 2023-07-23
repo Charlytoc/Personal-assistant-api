@@ -39,7 +39,7 @@ def get_better_studyplan_description(study_plan_description: str):
 
     1. Think about which is the most important objective of the study plan.
     2. Think in way to structure the plan in sections with smaller objectives
-    3. No more than four sections are necessary
+    3. No more than three-four sections are necessary
 
     Comments between `` are to help you understand your task
     Give your answer in the format of the following example:
@@ -58,7 +58,8 @@ def get_better_studyplan_description(study_plan_description: str):
 `
     _end_
 
-    The _start_, _end_ and _tit_ tags are mandatory. Always return your answer in the language of the student description
+    The _start_, _end_ and _tit_ tags are mandatory. Always return your answer in the language of the student description.
+    The title needs to be descriptive, an the objective must be clear.
     '''
 
     better_description_agent = SinglePromptAgent(template=_template)
