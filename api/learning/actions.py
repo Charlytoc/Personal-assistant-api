@@ -289,6 +289,7 @@ def create_studyplan_description_from_studyplan(study_plan: StudyPlan):
         print_in_color(f'Spend: {total_cost} \n Tokens: {total_tokens}', 'red')
 
 
+
 def comment_with_ai_from_topic_and_discussion(discussion: Discussion):
     _template = """
     You are an useful teacher. You are in a class about a certain topic. This is your class
@@ -330,3 +331,4 @@ def create_comment(profile:Profile, discussion:Discussion, text):
 
     # Optionally, you can return the created comment
     return new_comment
+
